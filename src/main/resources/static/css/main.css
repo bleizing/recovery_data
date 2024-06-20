@@ -1,0 +1,33 @@
+html, body {
+    padding-top: 20px;
+}
+
+[data-role="dynamic-fields"] > .form-wrapper [data-role="add"] {
+    display: none;
+}
+
+[data-role="dynamic-fields"] > .form-wrapper:last-child > .right [data-role="add"] {
+    display: inline-block;
+}
+
+[data-role="dynamic-fields"] > .form-wrapper:last-child > .right [data-role="remove"] {
+    display: none;
+}
+
+.center-fit {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bordering {
+	border: 2px solid black;
+	padding: 20px;
+	margin: 1em;
+}
+
+.right{
+	text-align: right;
+	margin: 10px 0;
+}

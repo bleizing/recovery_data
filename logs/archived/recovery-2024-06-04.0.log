@@ -1,0 +1,94 @@
+2024-06-04 08:02:51,682 INFO o.s.b.StartupInfoLogger [main] Starting RecoveryApplication using Java 19.0.1 with PID 1648 (D:\Dimas\Projects\Recovery Excel\recovery\target\classes started by hand_ in D:\Dimas\Projects\Recovery Excel\recovery)
+2024-06-04 08:02:51,684 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.2, Spring v6.0.11
+2024-06-04 08:02:51,685 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-06-04 08:02:52,574 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8380 (http)
+2024-06-04 08:02:52,583 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8380"]
+2024-06-04 08:02:52,586 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-06-04 08:02:52,587 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.11]
+2024-06-04 08:02:52,685 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-06-04 08:02:52,687 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 917 ms
+2024-06-04 08:02:53,081 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [main] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2024-06-04 08:02:53,112 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8380"]
+2024-06-04 08:02:53,137 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8380 (http) with context path ''
+2024-06-04 08:02:53,145 INFO o.s.b.StartupInfoLogger [main] Started RecoveryApplication in 2.019 seconds (process running for 2.353)
+2024-06-04 08:02:54,882 INFO o.a.j.l.DirectJDKLog [http-nio-8380-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-04 08:02:54,882 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Initializing Servlet 'dispatcherServlet'
+2024-06-04 08:02:54,883 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Completed initialization in 1 ms
+2024-06-04 08:02:54,981 INFO c.b.r.c.FileController [http-nio-8380-exec-1] process upload file = test.xlsx
+2024-06-04 08:02:54,983 INFO c.b.r.s.FileStorageService [http-nio-8380-exec-1] store file test.xlsx success
+2024-06-04 08:02:54,983 INFO c.b.r.c.FileController [http-nio-8380-exec-1] Uploaded the file successfully: test.xlsx with name test.xlsx
+2024-06-04 08:02:54,984 INFO c.b.r.s.PdfService [http-nio-8380-exec-1] create pdf file = GeneratedSQL-1717462974984.pdf
+2024-06-04 08:02:55,828 INFO c.b.r.s.PdfService [http-nio-8380-exec-1] end of create pdf
+2024-06-04 08:02:55,849 INFO c.b.r.s.PdfService [http-nio-8380-exec-1] end of create pdf
+2024-06-04 08:03:34,260 INFO c.b.r.c.FileController [http-nio-8380-exec-3] process upload file = test.xlsx
+2024-06-04 08:03:34,263 INFO c.b.r.s.FileStorageService [http-nio-8380-exec-3] store file test.xlsx success
+2024-06-04 08:03:34,263 INFO c.b.r.c.FileController [http-nio-8380-exec-3] Uploaded the file successfully: test.xlsx with name test.xlsx
+2024-06-04 08:03:34,263 INFO c.b.r.s.PdfService [http-nio-8380-exec-3] create pdf file = GeneratedSQL-1717463014263.pdf
+2024-06-04 08:03:34,287 INFO c.b.r.s.PdfService [http-nio-8380-exec-3] end of create pdf
+2024-06-04 08:03:34,309 INFO c.b.r.s.PdfService [http-nio-8380-exec-3] end of create pdf
+2024-06-04 08:04:19,205 INFO c.b.r.c.FileController [http-nio-8380-exec-5] process upload file = test.xlsx
+2024-06-04 08:04:19,207 INFO c.b.r.s.FileStorageService [http-nio-8380-exec-5] store file test.xlsx success
+2024-06-04 08:04:19,207 INFO c.b.r.c.FileController [http-nio-8380-exec-5] Uploaded the file successfully: test.xlsx with name test.xlsx
+2024-06-04 08:04:19,207 INFO c.b.r.s.PdfService [http-nio-8380-exec-5] create pdf file = GeneratedSQL-1717463059207.pdf
+2024-06-04 08:04:19,222 INFO c.b.r.s.PdfService [http-nio-8380-exec-5] end of create pdf
+2024-06-04 08:04:19,240 INFO c.b.r.s.PdfService [http-nio-8380-exec-5] end of create pdf
+2024-06-04 08:04:19,255 INFO c.b.r.s.PdfService [http-nio-8380-exec-5] end of create pdf
+2024-06-04 08:04:19,273 INFO c.b.r.s.PdfService [http-nio-8380-exec-5] end of create pdf
+2024-06-04 08:06:35,088 INFO c.b.r.c.FileController [http-nio-8380-exec-4] process upload file = test.xlsx
+2024-06-04 08:06:35,089 INFO c.b.r.s.FileStorageService [http-nio-8380-exec-4] store file test.xlsx success
+2024-06-04 08:06:35,089 INFO c.b.r.c.FileController [http-nio-8380-exec-4] Uploaded the file successfully: test.xlsx with name test.xlsx
+2024-06-04 08:06:35,089 INFO c.b.r.s.PdfService [http-nio-8380-exec-4] create pdf file = GeneratedSQL-1717463195089.pdf
+2024-06-04 08:06:35,103 INFO c.b.r.s.PdfService [http-nio-8380-exec-4] end of create pdf
+2024-06-04 08:06:35,117 INFO c.b.r.s.PdfService [http-nio-8380-exec-4] end of create pdf
+2024-06-04 08:06:35,132 INFO c.b.r.s.PdfService [http-nio-8380-exec-4] end of create pdf
+2024-06-04 08:06:35,147 INFO c.b.r.s.PdfService [http-nio-8380-exec-4] end of create pdf
+2024-06-04 08:07:00,999 INFO c.b.r.c.FileController [http-nio-8380-exec-9] process upload file = test.xlsx
+2024-06-04 08:07:01,001 INFO c.b.r.s.FileStorageService [http-nio-8380-exec-9] store file test.xlsx success
+2024-06-04 08:07:01,001 INFO c.b.r.c.FileController [http-nio-8380-exec-9] Uploaded the file successfully: test.xlsx with name test.xlsx
+2024-06-04 08:07:01,001 INFO c.b.r.s.PdfService [http-nio-8380-exec-9] create pdf file = GeneratedSQL-1717463221001.pdf
+2024-06-04 08:07:01,016 INFO c.b.r.s.PdfService [http-nio-8380-exec-9] end of create pdf
+2024-06-04 08:07:01,031 INFO c.b.r.s.PdfService [http-nio-8380-exec-9] end of create pdf
+2024-06-04 08:07:01,045 INFO c.b.r.s.PdfService [http-nio-8380-exec-9] end of create pdf
+2024-06-04 08:07:01,059 INFO c.b.r.s.PdfService [http-nio-8380-exec-9] end of create pdf
+2024-06-04 08:07:23,290 INFO c.b.r.c.FileController [http-nio-8380-exec-8] process upload file = test.xlsx
+2024-06-04 08:07:23,291 INFO c.b.r.s.FileStorageService [http-nio-8380-exec-8] store file test.xlsx success
+2024-06-04 08:07:23,291 INFO c.b.r.c.FileController [http-nio-8380-exec-8] Uploaded the file successfully: test.xlsx with name test.xlsx
+2024-06-04 08:07:23,291 INFO c.b.r.s.PdfService [http-nio-8380-exec-8] create pdf file = GeneratedSQL-1717463243291.pdf
+2024-06-04 08:07:23,300 INFO c.b.r.s.PdfService [http-nio-8380-exec-8] end of create pdf
+2024-06-04 08:07:23,312 INFO c.b.r.s.PdfService [http-nio-8380-exec-8] end of create pdf
+2024-06-04 08:07:23,323 INFO c.b.r.s.PdfService [http-nio-8380-exec-8] end of create pdf
+2024-06-04 08:07:23,335 INFO c.b.r.s.PdfService [http-nio-8380-exec-8] end of create pdf
+2024-06-04 08:23:56,561 INFO o.s.b.StartupInfoLogger [main] Starting RecoveryApplication using Java 19.0.1 with PID 24064 (D:\Dimas\Projects\Recovery Excel\recovery\target\classes started by hand_ in D:\Dimas\Projects\Recovery Excel\recovery)
+2024-06-04 08:23:56,562 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.2, Spring v6.0.11
+2024-06-04 08:23:56,563 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-06-04 08:23:57,124 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8380 (http)
+2024-06-04 08:23:57,130 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8380"]
+2024-06-04 08:23:57,131 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-06-04 08:23:57,132 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.11]
+2024-06-04 08:23:57,197 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-06-04 08:23:57,198 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 595 ms
+2024-06-04 08:23:57,326 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [static/index.html]
+2024-06-04 08:23:57,383 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [main] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2024-06-04 08:23:57,411 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8380"]
+2024-06-04 08:23:57,432 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8380 (http) with context path ''
+2024-06-04 08:23:57,437 INFO o.s.b.StartupInfoLogger [main] Started RecoveryApplication in 1.186 seconds (process running for 1.391)
+2024-06-04 08:24:06,611 INFO o.a.j.l.DirectJDKLog [http-nio-8380-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-04 08:24:06,611 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Initializing Servlet 'dispatcherServlet'
+2024-06-04 08:24:06,611 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Completed initialization in 0 ms
+2024-06-04 13:31:28,420 INFO o.s.b.StartupInfoLogger [main] Starting RecoveryApplication using Java 19.0.1 with PID 26664 (D:\Dimas\Projects\Recovery Excel\recovery\target\classes started by hand_ in D:\Dimas\Projects\Recovery Excel\recovery)
+2024-06-04 13:31:28,421 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.2, Spring v6.0.11
+2024-06-04 13:31:28,422 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-06-04 13:31:29,225 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8380 (http)
+2024-06-04 13:31:29,232 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8380"]
+2024-06-04 13:31:29,236 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-06-04 13:31:29,237 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.11]
+2024-06-04 13:31:29,351 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-06-04 13:31:29,352 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 887 ms
+2024-06-04 13:31:29,505 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [static/index.html]
+2024-06-04 13:31:29,575 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [main] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2024-06-04 13:31:29,603 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8380"]
+2024-06-04 13:31:29,633 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8380 (http) with context path ''
+2024-06-04 13:31:29,639 INFO o.s.b.StartupInfoLogger [main] Started RecoveryApplication in 1.548 seconds (process running for 1.797)
+2024-06-04 13:31:29,903 INFO o.a.j.l.DirectJDKLog [http-nio-8380-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-04 13:31:29,903 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Initializing Servlet 'dispatcherServlet'
+2024-06-04 13:31:29,904 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Completed initialization in 1 ms

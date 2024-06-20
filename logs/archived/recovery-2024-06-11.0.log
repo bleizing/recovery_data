@@ -1,0 +1,17 @@
+2024-06-11 08:39:00,500 INFO o.s.b.StartupInfoLogger [main] Starting RecoveryApplication using Java 19.0.1 with PID 29460 (D:\Dimas\Projects\Recovery Excel\recovery\target\classes started by hand_ in D:\Dimas\Projects\Recovery Excel\recovery)
+2024-06-11 08:39:00,504 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.2, Spring v6.0.11
+2024-06-11 08:39:00,506 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-06-11 08:39:01,352 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8380 (http)
+2024-06-11 08:39:01,361 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8380"]
+2024-06-11 08:39:01,366 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-06-11 08:39:01,367 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.11]
+2024-06-11 08:39:01,501 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-06-11 08:39:01,502 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 949 ms
+2024-06-11 08:39:01,820 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [static/index.html]
+2024-06-11 08:39:01,979 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [main] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2024-06-11 08:39:02,012 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8380"]
+2024-06-11 08:39:02,040 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8380 (http) with context path ''
+2024-06-11 08:39:02,048 INFO o.s.b.StartupInfoLogger [main] Started RecoveryApplication in 1.956 seconds (process running for 2.246)
+2024-06-11 08:39:21,761 INFO o.a.j.l.DirectJDKLog [http-nio-8380-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-11 08:39:21,761 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Initializing Servlet 'dispatcherServlet'
+2024-06-11 08:39:21,761 INFO o.s.w.s.FrameworkServlet [http-nio-8380-exec-1] Completed initialization in 0 ms
