@@ -20,15 +20,15 @@ Request Header : none
  {
     "regions": "uq_jp_db",
     "tables": "orders",
-    "sets" : {
-    "set1": {
-      "collumns":"referenceCell(C2) / set manual",
-      "value" : "referenceCell(D2)",
-      },
-    "set2": {
-      "collumns":"referenceCell(C2) / set manual",
-      "value" : "referenceCell(D2)",
-      },
+    "params" : {
+      "set1": {
+        "collumns":"referenceCell(C2) / set manual",
+        "value" : "referenceCell(D2)",
+        },
+      "set2": {
+        "collumns":"referenceCell(C2) / set manual",
+        "value" : "referenceCell(D2)",
+        },
     }
   "conditions" :{
     "conditions1" : {
@@ -66,15 +66,15 @@ Request Body :
  {
     "regions": "uq_jp_db",
     "tables": "orders",
-    "sets" : {
-    "set1": {
-      "collumns":"referenceCell(C2) / set manual",
-      "value" : "referenceCell(D2)",
-      },
-    "set2": {
-      "collumns":"referenceCell(C2) / set manual",
-      "value" : "referenceCell(D2)",
-      },
+    "params" : {
+      "set1": {
+        "collumns":"referenceCell(C2) / set manual",
+        "value" : "referenceCell(D2)",
+        },
+      "set2": {
+        "collumns":"referenceCell(C2) / set manual",
+        "value" : "referenceCell(D2)",
+        },
     }
   "conditions" :{
     "conditions1" : {

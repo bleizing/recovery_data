@@ -4,7 +4,7 @@ Endpoint : POST /api/{operations}
 
 Description : parameter in path url can fill what is operations sql needed like select update or deleted
 
-Request Header : none
+Request Header : TOKEN
 
 Request Body :
 
@@ -15,15 +15,15 @@ Request Body :
   "conditions" :{
     "conditions1" : {
       "columns": "A1",     //excel cell reference for disred which column want to SELECT for WHERE conditons
-      "params":  "=",
+      "comparative":  "=",
       "values":"A2:A11"
     },
     "conditions2" : {
-      "columns": "B2",     //excel cell reference for disred which column want to SELECT for WHERE need additional conditions
-      "params":  "=",
+      "columns": "B2",     //excel cell reference for disred which column want to SELECT for WHERE need additional onditions
+      "comparative":  "=",
       "values":"B2:B11"
     }
-  },
+  }
 }
 ```
 ## Response Body 
@@ -45,7 +45,7 @@ Response 500 Internal Server error
  }
  ```
 
-## Generate UPDATE
+## Generate UPDATE AND SELECT
 
 Endpoint : POST /api/{operations}
 
