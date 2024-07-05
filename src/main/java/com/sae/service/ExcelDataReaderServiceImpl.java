@@ -42,13 +42,13 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
                 if (row.getRowNum() == 0) {
                     continue;
                 }
+
                 // Iterate through the mapping header
                 for (Map.Entry<String, String> entry : mappingHeaders.entrySet()) {
                     String key = entry.getKey();
                     String column = entry.getValue();
                     String data = getCellValueAsString(row.getCell(columnMapping.get(column)));
 
-                    // Create new instances for each row
                     if (key.startsWith("condition")) {
                         SQLQueryRequest.SetConditions setCondition = new SQLQueryRequest.SetConditions();
                         setCondition.setColumns(column);
@@ -63,6 +63,7 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
                     }
                 }
                 System.out.println("iteration read : "+ a);
+
             }
 
             return SQLQueryRequest.builder()

@@ -73,20 +73,31 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
 
     private List<String> generateSelectSQL(SQLQueryRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
-        for (SQLQueryRequest.SetConditions condition : sqlQueryRequest.getConditions()) {
-            System.out.println("conditions iteration for: " + condition);
-            StringBuilder sql = new StringBuilder("SELECT ");
+
+        // Iterate over each combination of conditions
+        for (int i = 0; i < sqlQueryRequest.getConditions().size(); i += 2) {
+            SQLQueryRequest.SetConditions condition1 = sqlQueryRequest.getConditions().get(i);
+            SQLQueryRequest.SetConditions condition2 = sqlQueryRequest.getConditions().get(i + 1);
+
+            StringBuilder sql = new StringBuilder("SELECT * FROM ");
             sql.append(sqlQueryRequest.getRegions())
                     .append(".")
                     .append(sqlQueryRequest.getTables())
                     .append(" WHERE ")
-                    .append(condition.getColumns())
+                    .append(condition1.getColumns())
                     .append(" ")
-                    .append(condition.getComparative())
+                    .append(condition1.getComparative())
                     .append(" '")
-                    .append(condition.getValues())
+                    .append(condition1.getValues())
+                    .append("' AND ")
+                    .append(condition2.getColumns())
+                    .append(" ")
+                    .append(condition2.getComparative())
+                    .append(" '")
+                    .append(condition2.getValues())
                     .append("'");
 
+            // Optionally add set values if needed
             for (SQLQueryRequest.SetValue setValue : sqlQueryRequest.getSetValues()) {
                 sql.append(" AND ")
                         .append(setValue.getColumns())
@@ -97,6 +108,7 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
 
             queries.add(sql.toString());
         }
+
         return queries;
     }
     private List<String> generateCustomSQL(SQLQueryRequest sqlQueryRequest) {

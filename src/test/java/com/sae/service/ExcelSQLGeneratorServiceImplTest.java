@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,25 +57,25 @@ class ExcelSQLGeneratorServiceImplTest {
 
             // Read data from the Excel file
             SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "uq_jp_db", "orders", "=", columnsMapp, mappingHeader);
+                    multipartFile, "uq_au_db", "orders", "=", columnsMapp, mappingHeader);
             System.out.println("Read Excel result: " + sqlQueryRequest);
-
-            // Validate the result
-            assertNotNull(sqlQueryRequest);
-            assertEquals("uq_jp_db", sqlQueryRequest.getRegions());
-            assertEquals("orders", sqlQueryRequest.getTables());
-
-            // Generate the SQL query
-            List<String> generatedSQLs = excelSQLGeneratorService.generatorSQLFromRequest("SELECT", sqlQueryRequest);
+// Generate the SQL queries
+            List<String> generatedSQLs = new ArrayList<>();
+            generatedSQLs.addAll(excelSQLGeneratorService.generatorSQLFromRequest("SELECT", sqlQueryRequest));
 
             // Expected SQL
-            String expectedSQL1 = "SELECT * FROM orders WHERE orderId = '82228288' AND status = 'received'";
-            String expectedSQL2 = "SELECT * FROM orders WHERE orderId = '8388813' AND status = 'shipped'";
+            String expectedSQL1 = "SELECT * FROM uq_au_db.orders WHERE orderId = '1420011112406131435-0806620' AND status = 'received'";
+            String expectedSQL2 = "SELECT * FROM uq_au_db.orders WHERE orderId = '1420011112406131435-0806622' AND status = 'received'";
+            String expectedSQL3 = "SELECT * FROM uq_au_db.orders WHERE orderId = '1420011112406131435-0806624' AND status = 'received'";
+
             // Validate the generated SQLs
             System.out.println("Generated SQLs: " + generatedSQLs);
-            assertEquals(4, generatedSQLs.size());
+            assertEquals(3, generatedSQLs.size());
             assertEquals(expectedSQL1, generatedSQLs.get(0));
             assertEquals(expectedSQL2, generatedSQLs.get(1));
+            assertEquals(expectedSQL3, generatedSQLs.get(2));
+
+
         }catch (Exception e){
             fail("Exception occurred during test execution: " + e.getMessage());
         }
