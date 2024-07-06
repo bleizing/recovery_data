@@ -24,41 +24,57 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
     private List<String> generateUpdateSQL(SQLQueryRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
         List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
-        System.out.println("size conditionsPerQuery= "+sqlQueryRequest.getConditionsPerQuery());
-        int conditionsPerQuery = sqlQueryRequest.getConditionsPerQuery();
+        List<SQLQueryRequest.SetValue> setValues = sqlQueryRequest.getSetValues();
 
-        for (int i = 0; i < conditions.size(); i += conditionsPerQuery) {
-            StringBuilder sql = new StringBuilder("UPDATE ");
-            sql.append(sqlQueryRequest.getRegions())
-                    .append(".")
-                    .append(sqlQueryRequest.getTables())
-                    .append(" SET ");
+        StringBuilder sql = new StringBuilder("UPDATE ");
+        sql.append(sqlQueryRequest.getRegions())
+                .append(".")
+                .append(sqlQueryRequest.getTables())
+                .append(" SET ");
 
-            // Add conditions combined with AND
-            boolean firstCondition = true;
-            for (int j = i; j < i + conditionsPerQuery && j < conditions.size(); j++) {
-                SQLQueryRequest.SetConditions condition = conditions.get(j);
-                if (!firstCondition) {
-                    sql.append(" AND ");
-                }
-                sql.append(condition.getColumns())
-                        .append(" ")
-                        .append(condition.getComparative())
-                        .append(" ");
+        // Add set values combined with commas
+        boolean firstValue = true;
+        for (SQLQueryRequest.SetValue setValue : setValues) {
+            if (!firstValue) {
+                sql.append(", ");
+            }
+            sql.append(setValue.getColumns()).append(" = ");
+            String value = setValue.getValue();
 
-                // Check if the value is numeric (integer)
-                String value = condition.getValues();
-                boolean isNumeric = value.matches("\\d+") && value.length() <= 3;
-                if (isNumeric || value.matches(".*\\(.*\\)")){
-                    sql.append(condition.getValues()); // Append without quotes if numeric
-                }else{
-                    sql.append("'").append(condition.getValues()).append("'");
-                }
-                firstCondition = false;
+            // Check if value is numeric or contains specific function
+            if (isNumeric(value) || value.matches(".*\\(.*\\)")) {
+                sql.append(value);
+            } else {
+                sql.append("'").append(value).append("'");
             }
 
-            queries.add(sql.toString());
+            firstValue = false;
         }
+
+        sql.append(" WHERE ");
+
+        // Add conditions combined with AND
+        boolean firstCondition = true;
+        for (SQLQueryRequest.SetConditions condition : conditions) {
+            if (!firstCondition) {
+                sql.append(" AND ");
+            }
+            sql.append(condition.getColumns())
+                    .append(" ")
+                    .append(condition.getComparative())
+                    .append(" ");
+
+            String conditionValue = condition.getValues();
+            if (isNumeric(conditionValue) || conditionValue.matches(".*\\(.*\\)")) {
+                sql.append(conditionValue);
+            } else {
+                sql.append("'").append(conditionValue).append("'");
+            }
+
+            firstCondition = false;
+        }
+        sql.append(";");
+        queries.add(sql.toString());
 
         return queries;
     }
@@ -134,8 +150,7 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
 
                     // Check if the value is numeric (integer)
                     String value = condition.getValues();
-                    boolean isNumeric = value.matches("\\d+") && value.length() <= 3;
-                    if (isNumeric || value.matches(".*\\(.*\\)")){
+                    if (isNumeric(value) || value.matches(".*\\(.*\\)")){
                         sql.append(condition.getValues()); // Append without quotes if numeric
                     }else{
                         sql.append("'").append(condition.getValues()).append("'");
@@ -166,5 +181,16 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
         }
         conditionStr.delete(conditionStr.length() - 5, conditionStr.length()); // remove trailing " AND "
         return conditionStr.toString();
+    }
+    private boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }

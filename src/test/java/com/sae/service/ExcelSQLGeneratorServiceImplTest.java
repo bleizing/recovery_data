@@ -91,4 +91,48 @@ class ExcelSQLGeneratorServiceImplTest {
             fail("Exception occurred during test execution: " + e.getMessage());
         }
     }
+
+    @Test
+    void testReadAndGenerateUpdateSQL()throws IOException {
+        // Load the test Excel file
+        File file = new File("src/main/resources/tmp_data/test_update.xlsx");
+        InputStream inputStream = new FileInputStream(file);
+        multipartFile = new MockMultipartFile("file", inputStream);
+
+        // Prepare mapping header
+        Map<String, String> mappingHeader = new HashMap<>();
+        mappingHeader.put("setValue1", "status");
+        mappingHeader.put("setValue2", "last_update_date");
+        mappingHeader.put("condition1", "order_id");
+
+        //prepare columns array requestBody
+        Map<String, String> columnsMapp = new HashMap<>();
+        columnsMapp.put("column1","orders");
+        // Prepare comparatives map
+        Map<String, String> comparatives = new HashMap<>();
+        comparatives.put("last_update_date", "=");
+        comparatives.put("status", "=");
+        comparatives.put("order_id", "=");
+
+        try{
+            // Read data from the Excel file
+            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(
+                    multipartFile, "public", "orders", columnsMapp, mappingHeader, comparatives,"=");
+            System.out.println("Read Excel result: " + sqlQueryRequest);
+            assertNotNull(sqlQueryRequest);
+            assertEquals("public", sqlQueryRequest.getRegions());
+            assertEquals("orders", sqlQueryRequest.getTables());
+
+            List<String> generatedSQLs = new ArrayList<>();
+            generatedSQLs.addAll(excelSQLGeneratorService.generatorSQLFromRequest("UPDATE", sqlQueryRequest));
+            assertEquals(1, generatedSQLs.size());
+
+
+            //expected SQL
+            String expectedSQL = "UPDATE public.orders SET last_update_date = now(), status = 'DELETED' WHERE order_id = 1209380;";
+            assertEquals(expectedSQL, generatedSQLs.get(0));
+        }catch(Exception e){
+            fail("Exception occurred during execution update generate test: " + e.getMessage());
+        }
+    }
 }
