@@ -3,10 +3,7 @@ package com.sae.service;
 import com.sae.dto.SQLQueryRequest;
 import com.sae.repository.ExcelSQLGeneratorService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
     @Override
@@ -26,84 +23,124 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
 
     private List<String> generateUpdateSQL(SQLQueryRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
-        for (SQLQueryRequest.SetConditions condition : sqlQueryRequest.getConditions()) {
+        List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
+        System.out.println("size conditionsPerQuery= "+sqlQueryRequest.getConditionsPerQuery());
+        int conditionsPerQuery = sqlQueryRequest.getConditionsPerQuery();
+
+        for (int i = 0; i < conditions.size(); i += conditionsPerQuery) {
             StringBuilder sql = new StringBuilder("UPDATE ");
-            sql.append(sqlQueryRequest.getTables())
+            sql.append(sqlQueryRequest.getRegions())
+                    .append(".")
+                    .append(sqlQueryRequest.getTables())
                     .append(" SET ");
 
-            for (SQLQueryRequest.SetValue setValue : sqlQueryRequest.getSetValues()) {
-                sql.append(setValue.getColumns())
-                        .append(" = '")
-                        .append(setValue.getValue())
-                        .append("', ");
-            }
-            sql.delete(sql.length() - 2, sql.length());
+            // Add conditions combined with AND
+            boolean firstCondition = true;
+            for (int j = i; j < i + conditionsPerQuery && j < conditions.size(); j++) {
+                SQLQueryRequest.SetConditions condition = conditions.get(j);
+                if (!firstCondition) {
+                    sql.append(" AND ");
+                }
+                sql.append(condition.getColumns())
+                        .append(" ")
+                        .append(condition.getComparative())
+                        .append(" ");
 
-            sql.append(" WHERE ")
-                    .append(condition.getColumns())
-                    .append(" ")
-                    .append(condition.getComparative())
-                    .append(" '")
-                    .append(condition.getValues())
-                    .append("'");
+                // Check if the value is numeric (integer)
+                String value = condition.getValues();
+                boolean isNumeric = value.matches("\\d+") && value.length() <= 3;
+                if (isNumeric || value.matches(".*\\(.*\\)")){
+                    sql.append(condition.getValues()); // Append without quotes if numeric
+                }else{
+                    sql.append("'").append(condition.getValues()).append("'");
+                }
+                firstCondition = false;
+            }
 
             queries.add(sql.toString());
         }
+
         return queries;
     }
 
     private List<String> generateDeleteSQL(SQLQueryRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
-        for (SQLQueryRequest.SetConditions condition : sqlQueryRequest.getConditions()) {
-            StringBuilder sql = new StringBuilder("DELETE FROM ");
-            sql.append(sqlQueryRequest.getTables())
-                    .append(" WHERE ")
-                    .append(condition.getColumns())
-                    .append(" ")
-                    .append(condition.getComparative())
-                    .append(" '")
-                    .append(condition.getValues())
-                    .append("'");
+        List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
+        System.out.println("size conditionsPerQuery= "+sqlQueryRequest.getConditionsPerQuery());
+        int conditionsPerQuery = sqlQueryRequest.getConditionsPerQuery(); // Assuming 4 conditions per query as per your data structure
+
+        for (int i = 0; i < conditions.size(); i += conditionsPerQuery) {
+            StringBuilder sql = new StringBuilder("DELETE ");
+            sql.append(sqlQueryRequest.getRegions())
+                    .append(".")
+                    .append(sqlQueryRequest.getTables())
+                    .append(" WHERE ");
+
+            // Add conditions combined with AND
+            boolean firstCondition = true;
+            for (int j = i; j < i + conditionsPerQuery && j < conditions.size(); j++) {
+                SQLQueryRequest.SetConditions condition = conditions.get(j);
+                if (!firstCondition) {
+                    sql.append(" AND ");
+                }
+                sql.append(condition.getColumns())
+                        .append(" ")
+                        .append(condition.getComparative())
+                        .append(" ");
+
+                // Check if the value is numeric (integer)
+                try {
+                    Integer.parseInt(condition.getValues());
+                    sql.append(condition.getValues()); // Append without quotes if numeric
+                } catch (NumberFormatException e) {
+                    sql.append("'").append(condition.getValues()).append("'"); // Append with quotes if not numeric
+                }
+
+                firstCondition = false;
+            }
 
             queries.add(sql.toString());
         }
+
         return queries;
+
     }
 
 
     private List<String> generateSelectSQL(SQLQueryRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
+        List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
+        System.out.println("size conditionsPerQuery= "+sqlQueryRequest.getConditionsPerQuery());
+        int conditionsPerQuery = sqlQueryRequest.getConditionsPerQuery(); // Assuming 4 conditions per query as per your data structure
 
-        // Iterate over each combination of conditions
-        for (int i = 0; i < sqlQueryRequest.getConditions().size(); i += 2) {
-            SQLQueryRequest.SetConditions condition1 = sqlQueryRequest.getConditions().get(i);
-            SQLQueryRequest.SetConditions condition2 = sqlQueryRequest.getConditions().get(i + 1);
-
-            StringBuilder sql = new StringBuilder("SELECT * FROM ");
+        for (int i = 0; i < conditions.size(); i += conditionsPerQuery) {
+            StringBuilder sql = new StringBuilder("SELECT ");
             sql.append(sqlQueryRequest.getRegions())
                     .append(".")
                     .append(sqlQueryRequest.getTables())
-                    .append(" WHERE ")
-                    .append(condition1.getColumns())
-                    .append(" ")
-                    .append(condition1.getComparative())
-                    .append(" '")
-                    .append(condition1.getValues())
-                    .append("' AND ")
-                    .append(condition2.getColumns())
-                    .append(" ")
-                    .append(condition2.getComparative())
-                    .append(" '")
-                    .append(condition2.getValues())
-                    .append("'");
+                    .append(" WHERE ");
 
-            // Optionally add set values if needed
-            for (SQLQueryRequest.SetValue setValue : sqlQueryRequest.getSetValues()) {
-                sql.append(" AND ")
-                        .append(setValue.getColumns())
-                        .append(" = '")
-                        .append(setValue.getValue())
-                        .append("'");
+            // Add conditions combined with AND
+            boolean firstCondition = true;
+            for (int j = i; j < i + conditionsPerQuery && j < conditions.size(); j++) {
+                SQLQueryRequest.SetConditions condition = conditions.get(j);
+                if (!firstCondition) {
+                    sql.append(" AND ");
+                }
+                sql.append(condition.getColumns())
+                        .append(" ")
+                        .append(condition.getComparative())
+                        .append(" ");
+
+                    // Check if the value is numeric (integer)
+                    String value = condition.getValues();
+                    boolean isNumeric = value.matches("\\d+") && value.length() <= 3;
+                    if (isNumeric || value.matches(".*\\(.*\\)")){
+                        sql.append(condition.getValues()); // Append without quotes if numeric
+                    }else{
+                        sql.append("'").append(condition.getValues()).append("'");
+                    }
+                firstCondition = false;
             }
 
             queries.add(sql.toString());

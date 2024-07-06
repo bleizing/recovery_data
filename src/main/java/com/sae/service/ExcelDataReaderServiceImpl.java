@@ -18,9 +18,10 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
     public SQLQueryRequest readExcelData(MultipartFile file,
                                          String regions,
                                          String tables,
-                                         String comparative,
                                          Map<String, String> columns ,
-                                         Map<String, String> mappingHeaders) throws Exception {
+                                         Map<String, String> mappingHeaders,
+                                         Map<String, String> comparatives,
+                                         String defaultComparative) throws Exception {
         try (InputStream is = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
@@ -29,9 +30,10 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
             Map<String, Integer> columnMapping = new HashMap<>();
             Row headerRow = sheet.getRow(0);
             for (Cell cell : headerRow) {
+                System.out.println(headerRow.getRowNum());
                 columnMapping.put(getCellValueAsString(cell), cell.getColumnIndex());
             }
-
+            int conditionsPerQuery = columnMapping.size();
             // Initialize lists to store conditions and values
             List<SQLQueryRequest.SetConditions> setConditionsList = new ArrayList<>();
             List<SQLQueryRequest.SetValue> setValuesList = new ArrayList<>();
@@ -43,7 +45,7 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
                     continue;
                 }
 
-                // Iterate through the mapping header
+                // Iterate through the mapping header for condition
                 for (Map.Entry<String, String> entry : mappingHeaders.entrySet()) {
                     String key = entry.getKey();
                     String column = entry.getValue();
@@ -53,7 +55,8 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
                         SQLQueryRequest.SetConditions setCondition = new SQLQueryRequest.SetConditions();
                         setCondition.setColumns(column);
                         setCondition.setValues(data);
-                        setCondition.setComparative(comparative); // Example default value
+                        // Set the comparative value from the comparatives map or use the default
+                        setCondition.setComparative(comparatives.getOrDefault(column, defaultComparative));
                         setConditionsList.add(setCondition);
                     } else if (key.startsWith("setValue")) {
                         SQLQueryRequest.SetValue setValue = new SQLQueryRequest.SetValue();
@@ -71,6 +74,7 @@ public class ExcelDataReaderServiceImpl implements ExcelDataReadService {
                     .tables(tables) // Use the parameter
                     .conditions(setConditionsList) // Use the list
                     .setValues(setValuesList) // Use the list
+                    .conditionsPerQuery(conditionsPerQuery)
                     .build();
         }
     }

@@ -45,11 +45,12 @@ public class SQLGenerateController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("regions") String regions,
             @RequestParam("table") String tables,
-            @RequestParam("comparative") String comparative,
             @RequestBody Map<String, String> columns,
-            @RequestBody Map<String, String> mappingHeaders){
+            @RequestBody Map<String, String> mappingHeaders,
+            @RequestBody Map<String, String> comparatives,
+            @RequestParam(value = "defaultComparative", defaultValue = "=") String defaultComparative){
         try {
-            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(file, regions, tables,comparative, columns, mappingHeaders);
+            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(file, regions, tables,columns, mappingHeaders,comparatives,defaultComparative);
             return ResponseEntity.ok(new WebResponse<>(sqlQueryRequest, null));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new WebResponse<>(null, "Error reading Excel file: " + e.getMessage()));

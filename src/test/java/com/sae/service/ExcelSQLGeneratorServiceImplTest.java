@@ -38,35 +38,46 @@ class ExcelSQLGeneratorServiceImplTest {
     }
 
     @Test
-    void testReadAndGenerate() throws IOException {
+    void testReadAndGenerateSelectMoreConditions() throws IOException {
         // Load the test Excel file
-        File file = new File("src/main/resources/tmp_data/test.xlsx");
+        File file = new File("src/main/resources/tmp_data/test_select.xlsx");
         InputStream inputStream = new FileInputStream(file);
         multipartFile = new MockMultipartFile("file", inputStream);
 
         // Prepare mapping header
         Map<String, String> mappingHeader = new HashMap<>();
-        mappingHeader.put("condition1", "orderId");
+        mappingHeader.put("condition1", "order_number");
         mappingHeader.put("condition2", "status");
+        mappingHeader.put("condition3", "store_information_id");
+
         //prepare columns array requestBody
         Map<String, String> columnsMapp = new HashMap<>();
         columnsMapp.put("column1","orders");
+        // Prepare comparatives map
+        Map<String, String> comparatives = new HashMap<>();
+        comparatives.put("order_number", "=");
+        comparatives.put("status", "=");
+        comparatives.put("store_information_id", "LIKE");
 
         // Read data from the Excel file
         try{
 
             // Read data from the Excel file
             SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "uq_au_db", "orders", "=", columnsMapp, mappingHeader);
+                    multipartFile, "uq_au_db", "orders", columnsMapp, mappingHeader, comparatives,"=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
-// Generate the SQL queries
+            // Validate the result
+            assertNotNull(sqlQueryRequest);
+            assertEquals("uq_au_db", sqlQueryRequest.getRegions());
+            assertEquals("orders", sqlQueryRequest.getTables());
+
             List<String> generatedSQLs = new ArrayList<>();
             generatedSQLs.addAll(excelSQLGeneratorService.generatorSQLFromRequest("SELECT", sqlQueryRequest));
 
             // Expected SQL
-            String expectedSQL1 = "SELECT * FROM uq_au_db.orders WHERE orderId = '1420011112406131435-0806620' AND status = 'received'";
-            String expectedSQL2 = "SELECT * FROM uq_au_db.orders WHERE orderId = '1420011112406131435-0806622' AND status = 'received'";
-            String expectedSQL3 = "SELECT * FROM uq_au_db.orders WHERE orderId = '1420011112406131435-0806624' AND status = 'received'";
+            String expectedSQL1 = "SELECT uq_au_db.orders WHERE order_number = '1420011112406131435-0806620' AND status = 'received' AND store_information_id LIKE 12";
+            String expectedSQL2 = "SELECT uq_au_db.orders WHERE order_number = '1420011112406131435-0806622' AND status = 'received' AND store_information_id LIKE 12";
+            String expectedSQL3 = "SELECT uq_au_db.orders WHERE order_number = '1420011112406131435-0806624' AND status = 'received' AND store_information_id LIKE 12";
 
             // Validate the generated SQLs
             System.out.println("Generated SQLs: " + generatedSQLs);

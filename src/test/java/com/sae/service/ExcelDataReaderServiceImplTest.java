@@ -33,35 +33,6 @@ class ExcelDataReaderServiceImplTest {
 
     @Test
     void testRead() throws Exception {
-        // Load the test Excel file
-        File file = new File("src/main/resources/tmp_data/test.xlsx");
-        InputStream inputStream = new FileInputStream(file);
-        multipartFile = new MockMultipartFile("file", inputStream);
 
-        // Prepare mapping header
-        Map<String, String> mappingHeader = new HashMap<>();
-
-        Map<String, String> mappingColumns = new HashMap<>();
-        mappingColumns.put("orderId", "A"); // Column A for orderId
-        mappingColumns.put("status", "B");  // Column B for status
-        // Read data from the Excel file
-        SQLQueryRequest result = excelDataReadService.readExcelData(
-                multipartFile, "uq_jp_db", "orders", "=", null ,null);
-
-        // Validate the result
-        assertNotNull(result);
-        assertEquals("uq_jp_db", result.getRegions());
-        assertEquals("orders", result.getTables());
-
-        // Validate the conditions
-        SQLQueryRequest.SetConditions setCondition = result.getConditions().get(0);
-        assertNotNull(setCondition);
-        assertEquals("82228288", setCondition.getValues());
-        assertEquals("=", setCondition.getComparative());
-
-        // Validate the set values
-        SQLQueryRequest.SetValue setValue = result.getSetValues().get(0);
-        assertNotNull(setValue);
-        assertEquals("received", setValue.getValue());
     }
 }

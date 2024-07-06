@@ -18,6 +18,7 @@ public class SQLQueryRequest {
     private String columns;
     private List<SetValue> setValues;
     private List<SetConditions> conditions;
+    private int conditionsPerQuery;
 
     @Getter
     @Setter
