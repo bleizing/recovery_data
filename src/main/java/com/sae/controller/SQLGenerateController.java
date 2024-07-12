@@ -1,12 +1,18 @@
 package com.sae.controller;
 
 
-import com.sae.dto.SQLQueryRequest;
-import com.sae.models.WebResponse;
+import com.sae.models.request.SQLQueryRequest;
+import com.sae.entity.SetConditions;
+import com.sae.entity.Requests;
+import com.sae.entity.SetValue;
+import com.sae.entity.Users;
+import com.sae.models.response.WebResponse;
 import com.sae.repository.ExcelDataReadService;
 import com.sae.repository.ExcelSQLGeneratorService;
+import com.sae.repository.SQLFileService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -24,17 +31,23 @@ public class SQLGenerateController {
     private ExcelDataReadService excelDataReadService;
     @Autowired
     private ExcelSQLGeneratorService excelSQLGeneratorService;
+    @Autowired
+    private SQLFileService sqlFileService;
 
-    @PostMapping("/{operations}")
-    public ResponseEntity<WebResponse<List<String>>> generateSQL(
+    @PostMapping(
+                path = "/generateSQL/{operations}",
+                consumes = MediaType.APPLICATION_JSON_VALUE,
+                produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public WebResponse<String> generateSQL(
             @PathVariable String operations,
-            @Valid @RequestBody SQLQueryRequest sqlQueryRequest,
-            @RequestHeader("TOKEN") String token){
+            @RequestHeader("user_id") String userId,
+            @Valid @RequestBody SQLQueryRequest sqlQueryRequest){
         try {
             List<String> generatedSQL = excelSQLGeneratorService.generatorSQLFromRequest(operations, sqlQueryRequest);
-            return ResponseEntity.ok(new WebResponse<>(generatedSQL, null));
+            sqlFileService.saveSQLFile(generatedSQL,operations, sqlQueryRequest);
+            return WebResponse.<String>builder().data("OK").build();
         }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(new WebResponse<>(null, "Invalid operation: " + operations));
+            return
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new WebResponse<>(null, "Error generating SQL: " + e.getMessage()));
         }

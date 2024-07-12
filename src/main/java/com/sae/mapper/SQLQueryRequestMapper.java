@@ -1,27 +1,30 @@
 package com.sae.mapper;
 
-import com.sae.dto.SQLQueryRequest;
-import com.sae.entity.Conditions;
+import com.sae.models.request.SQLQueryRequest;
+import com.sae.entity.SetConditions;
 import com.sae.entity.Requests;
-import com.sae.entity.SettersVal;
+import com.sae.entity.SetValue;
 import com.sae.entity.Users;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SQLQueryRequestMapper {
 
-    public static SQLQueryRequest toDto(Requests requests) {
+    public static SQLQueryRequest toDto(Requests requests, Map<String, String> headers) {
         return SQLQueryRequest.builder()
+                .fileLocation(requests.getLocationFile())
                 .regions(requests.getRegions())
                 .tables(requests.getTables())
                 .columns(requests.getColumns())
-                .setValues(toSetValueDtoList(requests.getParams()))
+                .setValues(toSetValueDtoList(requests.getSetValue()))
                 .conditions(toConditionDtoList(requests.getConditions()))
+                .headers(headers)
                 .build();
     }
 
-    private static List<SQLQueryRequest.SetConditions> toConditionDtoList(List<Conditions> conditionsList) {
+    private static List<SQLQueryRequest.SetConditions> toConditionDtoList(List<SetConditions> conditionsList) {
         return conditionsList.stream()
                 .map(conditions -> {
                     SQLQueryRequest.SetConditions setCondition = new SQLQueryRequest.SetConditions();
@@ -33,7 +36,7 @@ public class SQLQueryRequestMapper {
                 .collect(Collectors.toList());
     }
 
-    private static List<SQLQueryRequest.SetValue> toSetValueDtoList(List<SettersVal> settersValList) {
+    private static List<SQLQueryRequest.SetValue> toSetValueDtoList(List<SetValue> settersValList) {
         return settersValList.stream()
                 .map(settersVal -> {
                     SQLQueryRequest.SetValue setValue = new SQLQueryRequest.SetValue();
@@ -50,15 +53,15 @@ public class SQLQueryRequestMapper {
         requests.setRegions(sqlQueryRequest.getRegions());
         requests.setTables(sqlQueryRequest.getTables());
         requests.setColumns(sqlQueryRequest.getColumns());
-        requests.setParams(toSettersValEntityList(sqlQueryRequest.getSetValues(), requests));
+        requests.setSetValue(toSettersValEntityList(sqlQueryRequest.getSetValues(), requests));
         requests.setConditions(toConditionsEntityList(sqlQueryRequest.getConditions(), requests));
         return requests;
     }
 
-    private static List<SettersVal> toSettersValEntityList(List<SQLQueryRequest.SetValue> setValueList, Requests requests) {
+    private static List<SetValue> toSettersValEntityList(List<SQLQueryRequest.SetValue> setValueList, Requests requests) {
         return setValueList.stream()
                 .map(setValue -> {
-                    SettersVal settersVal = new SettersVal();
+                    SetValue settersVal = new SetValue();
                     settersVal.setRequests(requests);
                     settersVal.setColumns(setValue.getColumns());
                     settersVal.setValues(setValue.getValue());
@@ -66,10 +69,10 @@ public class SQLQueryRequestMapper {
                 })
                 .collect(Collectors.toList());
     }
-    private static List<Conditions> toConditionsEntityList(List<SQLQueryRequest.SetConditions> setConditionList, Requests requests) {
+    private static List<SetConditions> toConditionsEntityList(List<SQLQueryRequest.SetConditions> setConditionList, Requests requests) {
         return setConditionList.stream()
                 .map(setCondition -> {
-                    Conditions conditions = new Conditions();
+                    SetConditions conditions = new SetConditions();
                     conditions.setRequests(requests);
                     conditions.setColumns(setCondition.getColumns());
                     conditions.setComparative(setCondition.getComparative());

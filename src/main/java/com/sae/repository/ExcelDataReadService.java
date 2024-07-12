@@ -1,6 +1,6 @@
 package com.sae.repository;
 
-import com.sae.dto.SQLQueryRequest;
+import com.sae.models.request.SQLQueryRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;

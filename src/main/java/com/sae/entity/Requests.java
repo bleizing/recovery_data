@@ -32,8 +32,11 @@ public class Requests {
     private String columns;
 
     @OneToMany(mappedBy = "requests", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SettersVal> params;
+    private List<SetValue> setValue;
 
     @OneToMany(mappedBy = "requests", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Conditions> conditions;
+    private List<SetConditions> conditions;
+    //add column for location_file
+    @Column(name = "file_location")
+    private String locationFile;
 }

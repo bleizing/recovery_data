@@ -1,6 +1,6 @@
-package com.sae.service;
+package com.sae.service.impl;
 
-import com.sae.dto.SQLQueryRequest;
+import com.sae.models.request.SQLQueryRequest;
 import com.sae.repository.ExcelDataReadService;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;

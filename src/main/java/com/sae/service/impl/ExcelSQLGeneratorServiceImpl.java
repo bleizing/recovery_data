@@ -1,10 +1,12 @@
-package com.sae.service;
+package com.sae.service.impl;
 
-import com.sae.dto.SQLQueryRequest;
+import com.sae.models.request.SQLQueryRequest;
 import com.sae.repository.ExcelSQLGeneratorService;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
     @Override
     public List<String> generatorSQLFromRequest(String operations, SQLQueryRequest sqlQueryRequest) throws Exception {
@@ -105,13 +107,12 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
                         .append(" ");
 
                 // Check if the value is numeric (integer)
-                try {
-                    Integer.parseInt(condition.getValues());
+                String value = condition.getValues();
+                if (isNumeric(value) || value.matches(".*\\(.*\\)")){
                     sql.append(condition.getValues()); // Append without quotes if numeric
-                } catch (NumberFormatException e) {
-                    sql.append("'").append(condition.getValues()).append("'"); // Append with quotes if not numeric
+                }else{
+                    sql.append("'").append(condition.getValues()).append("'");
                 }
-
                 firstCondition = false;
             }
 

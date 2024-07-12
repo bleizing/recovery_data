@@ -1,4 +1,4 @@
-package com.sae.models;
+package com.sae.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

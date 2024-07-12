@@ -6,15 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Optional;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "params")
-public class SettersVal {
+public class SetValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

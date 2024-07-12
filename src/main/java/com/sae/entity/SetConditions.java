@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "conditions")
-public class Conditions {
+public class SetConditions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

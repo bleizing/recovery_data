@@ -23,7 +23,7 @@ public class Users {
     private String password;
     private String token;
 
-    @Column(name = "token_expierd_at")
+    @Column(name = "token_expired_at")
     private Long tokenExpiredAt;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
