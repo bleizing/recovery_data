@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,32 +42,54 @@ public class SQLGenerateController {
     public WebResponse<String> generateSQL(
             @PathVariable String operations,
             @RequestHeader("user_id") String userId,
+            @RequestHeader("token") String token,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("regions") String regions,
+            @RequestParam("tables") String tables,
+            @RequestParam Map<String, String> columns,
+            @RequestParam Map<String, String> mappingHeaders,
+            @RequestParam Map<String, String> comparatives,
+            @RequestParam(value = "defaultComparative", defaultValue = "=") String defaultComparative,
+            @RequestParam("isSaveToDB") Boolean isToDB,
+            @RequestParam("fileName") String fileName,
             @Valid @RequestBody SQLQueryRequest sqlQueryRequest){
         try {
+           //read excel
+            SQLQueryRequest requestFromExcel =  excelDataReadService.readExcelData(
+                    file,
+                    regions,
+                    tables,
+                    columns,
+                    mappingHeaders,
+                    comparatives,
+                    defaultComparative
+            );
+            //read excel
+            //merge requestFromExcel data into sqlQueryRequest
+            sqlQueryRequest.setRegions(requestFromExcel.getRegions());
+            sqlQueryRequest.setTables(requestFromExcel.getTables());
+            sqlQueryRequest.setColumns(requestFromExcel.getColumns());
+            sqlQueryRequest.setSetValues(requestFromExcel.getSetValues());
+            sqlQueryRequest.setConditions(requestFromExcel.getConditions());
+            sqlQueryRequest.setIsSaveToDB(isToDB);
+            sqlQueryRequest.setFileName(fileName);
+
+            //set userId
+            sqlQueryRequest.setUserId(userId);
+            sqlQueryRequest.setToken(token);
+
+            //generate , save and upload to DB
             List<String> generatedSQL = excelSQLGeneratorService.generatorSQLFromRequest(operations, sqlQueryRequest);
-            sqlFileService.saveSQLFile(generatedSQL,operations, sqlQueryRequest);
-            return WebResponse.<String>builder().data("OK").build();
-        }catch (IllegalArgumentException e){
-            return
+            // Check if generatedSQL is null and throw an IOException if it is
+            if (generatedSQL == null || generatedSQL.isEmpty()) {
+                throw new IOException("Generated SQL is null or empty.");
+            }
+            sqlFileService.saveSQLFile(generatedSQL, operations, sqlQueryRequest);
+            //save if success generate
+            return WebResponse.<String>builder().data("true").build();
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new WebResponse<>(null, "Error generating SQL: " + e.getMessage()));
+            return WebResponse.<String>builder().data("false {}"+ e).build();
         }
     }
 
-    @PostMapping("/readExcel")
-    public ResponseEntity<WebResponse<SQLQueryRequest>> readExcelData(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("regions") String regions,
-            @RequestParam("table") String tables,
-            @RequestBody Map<String, String> columns,
-            @RequestBody Map<String, String> mappingHeaders,
-            @RequestBody Map<String, String> comparatives,
-            @RequestParam(value = "defaultComparative", defaultValue = "=") String defaultComparative){
-        try {
-            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(file, regions, tables,columns, mappingHeaders,comparatives,defaultComparative);
-            return ResponseEntity.ok(new WebResponse<>(sqlQueryRequest, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new WebResponse<>(null, "Error reading Excel file: " + e.getMessage()));
-        }
-    }
 }

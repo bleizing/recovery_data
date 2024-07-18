@@ -2,12 +2,12 @@ package com.sae.service.impl;
 
 import com.sae.entity.Requests;
 import com.sae.repository.RequestService;
-import com.sae.repository.RequestRepository;
+import com.sae.repository.RequestsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class RequestServiceImpl implements RequestService {
     @Autowired
-    private RequestRepository requestRepository;
+    private RequestsRepository requestRepository;
     @Override
     public void saveRequest(Requests requests) {
         requestRepository.save(requests);

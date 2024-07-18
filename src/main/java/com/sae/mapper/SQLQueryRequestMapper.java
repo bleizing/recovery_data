@@ -20,7 +20,7 @@ public class SQLQueryRequestMapper {
                 .columns(requests.getColumns())
                 .setValues(toSetValueDtoList(requests.getSetValue()))
                 .conditions(toConditionDtoList(requests.getConditions()))
-                .headers(headers)
+                .headers(headers.toString())
                 .build();
     }
 

@@ -13,8 +13,9 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class SQLQueryRequest {
-    //headers
-    private Map<String, String> headers;
+    private String userId;
+    private String token;
+    private String headers;
     @NotNull
     private Boolean isSaveToDB;
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "Username must not contain special characters")
@@ -28,7 +29,7 @@ public class SQLQueryRequest {
     private String columns;
     private List<SetValue> setValues;
     private List<SetConditions> conditions;
-//    private int conditionsPerQuery;
+    private int conditionsPerQuery;
 
 
     @Getter
