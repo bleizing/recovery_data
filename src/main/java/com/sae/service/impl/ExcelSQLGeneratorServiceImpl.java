@@ -1,6 +1,6 @@
 package com.sae.service.impl;
 
-import com.sae.models.request.SQLQueryRequest;
+import com.sae.models.request.SQLRequest;
 import com.sae.repository.ExcelSQLGeneratorService;
 import org.springframework.stereotype.Service;
 
@@ -9,81 +9,90 @@ import java.util.*;
 @Service
 public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
     @Override
-    public List<String> generatorSQLFromRequest(String operations, SQLQueryRequest sqlQueryRequest) throws Exception {
-        switch (operations.toUpperCase()) {
-            case "SELECT":
-                return generateSelectSQL(sqlQueryRequest);
-            case "DELETE":
-                return generateDeleteSQL(sqlQueryRequest);
-            case "UPDATE":
-                return generateUpdateSQL(sqlQueryRequest);
-            case "CUSTOM":
-                return generateCustomSQL(sqlQueryRequest);
-            default:
-                throw new IllegalArgumentException("Unsupported operation: " + operations);
-        }}
+    public List<String> generatorSQLFromRequest(String operations, SQLRequest sqlQueryRequest) {
+        return switch (operations.toUpperCase()) {
+            case "SELECT" -> generateSelectSQL(sqlQueryRequest);
+            case "DELETE" -> generateDeleteSQL(sqlQueryRequest);
+            case "UPDATE" -> generateUpdateSQL(sqlQueryRequest);
+            case "CUSTOM" -> generateCustomSQL(sqlQueryRequest);
+            default -> throw new IllegalArgumentException("Unsupported operation: " + operations);
+        };
+    }
 
-    private List<String> generateUpdateSQL(SQLQueryRequest sqlQueryRequest) {
+    private List<String> generateUpdateSQL(SQLRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
-        List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
-        List<SQLQueryRequest.SetValue> setValues = sqlQueryRequest.getSetValues();
+        List<SQLRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
+        List<SQLRequest.SetValue> setValues = sqlQueryRequest.getSetValues();
+        int totalRows = sqlQueryRequest.getTotalRows(); // Menggunakan totalRows dari request
 
-        StringBuilder sql = new StringBuilder("UPDATE ");
-        sql.append(sqlQueryRequest.getRegions())
-                .append(".")
-                .append(sqlQueryRequest.getTables())
-                .append(" SET ");
+        System.out.println("Total SetValue: " + setValues.size());
+        System.out.println("Total conditions: " + conditions.size());
+        System.out.println("Total rows: " + totalRows);
 
-        // Add set values combined with commas
-        boolean firstValue = true;
-        for (SQLQueryRequest.SetValue setValue : setValues) {
-            if (!firstValue) {
-                sql.append(", ");
+        for (int i = 0; i < totalRows; i++) {
+            StringBuilder sql = new StringBuilder("UPDATE ");
+            sql.append(sqlQueryRequest.getRegions())
+                    .append(".")
+                    .append(sqlQueryRequest.getTables())
+                    .append(" SET ");
+
+            // Tambahkan setValues digabung dengan koma
+            boolean firstValue = true;
+            for (int j = 0; j < setValues.size() / totalRows; j++) {
+                if (!firstValue) {
+                    sql.append(", ");
+                }
+                SQLRequest.SetValue setValue = setValues.get(j + i * (setValues.size() / totalRows));
+                sql.append(setValue.getColumns()).append(" = ");
+                String value = setValue.getValue();
+
+                // Periksa apakah value numerik atau mengandung fungsi khusus
+                if (isNumeric(value) || value.matches(".*\\(.*\\)")) {
+                    sql.append(value);
+                } else {
+                    sql.append("'").append(value).append("'");
+                }
+
+                firstValue = false;
             }
-            sql.append(setValue.getColumns()).append(" = ");
-            String value = setValue.getValue();
 
-            // Check if value is numeric or contains specific function
-            if (isNumeric(value) || value.matches(".*\\(.*\\)")) {
-                sql.append(value);
-            } else {
-                sql.append("'").append(value).append("'");
+            sql.append(" WHERE ");
+
+            // Tambahkan kondisi digabung dengan AND
+            boolean firstCondition = true;
+            for (int j = 0; j < conditions.size() / totalRows; j++) {
+                if (!firstCondition) {
+                    sql.append(" AND ");
+                }
+                SQLRequest.SetConditions setCondition = conditions.get(j + i * (conditions.size() / totalRows));
+                sql.append(setCondition.getColumns())
+                        .append(" ")
+                        .append(setCondition.getComparative())
+                        .append(" ");
+
+                String value = setCondition.getValues();
+
+                // Periksa apakah value numerik atau mengandung fungsi khusus
+                if (isNumeric(value) || value.matches(".*\\(.*\\)")) {
+                    sql.append(value);
+                } else {
+                    sql.append("'").append(value).append("'");
+                }
+
+                firstCondition = false;
             }
 
-            firstValue = false;
+            sql.append(";");
+            queries.add(sql.toString());
         }
 
-        sql.append(" WHERE ");
-
-        // Add conditions combined with AND
-        boolean firstCondition = true;
-        for (SQLQueryRequest.SetConditions condition : conditions) {
-            if (!firstCondition) {
-                sql.append(" AND ");
-            }
-            sql.append(condition.getColumns())
-                    .append(" ")
-                    .append(condition.getComparative())
-                    .append(" ");
-
-            String conditionValue = condition.getValues();
-            if (isNumeric(conditionValue) || conditionValue.matches(".*\\(.*\\)")) {
-                sql.append(conditionValue);
-            } else {
-                sql.append("'").append(conditionValue).append("'");
-            }
-
-            firstCondition = false;
-        }
-        sql.append(";");
-        queries.add(sql.toString());
-
+        System.out.println("Generated SQL queries: " + queries);
         return queries;
     }
 
-    private List<String> generateDeleteSQL(SQLQueryRequest sqlQueryRequest) {
+    private List<String> generateDeleteSQL(SQLRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
-        List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
+        List<SQLRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
         System.out.println("size conditionsPerQuery= "+sqlQueryRequest.getConditionsPerQuery());
         int conditionsPerQuery = sqlQueryRequest.getConditionsPerQuery(); // Assuming 4 conditions per query as per your data structure
 
@@ -97,7 +106,7 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
             // Add conditions combined with AND
             boolean firstCondition = true;
             for (int j = i; j < i + conditionsPerQuery && j < conditions.size(); j++) {
-                SQLQueryRequest.SetConditions condition = conditions.get(j);
+                SQLRequest.SetConditions condition = conditions.get(j);
                 if (!firstCondition) {
                     sql.append(" AND ");
                 }
@@ -124,9 +133,9 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
     }
 
 
-    private List<String> generateSelectSQL(SQLQueryRequest sqlQueryRequest) {
+    private List<String> generateSelectSQL(SQLRequest sqlQueryRequest) {
         List<String> queries = new ArrayList<>();
-        List<SQLQueryRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
+        List<SQLRequest.SetConditions> conditions = sqlQueryRequest.getConditions();
         System.out.println("size conditionsPerQuery= "+sqlQueryRequest.getConditionsPerQuery());
         int conditionsPerQuery = sqlQueryRequest.getConditionsPerQuery(); // Assuming 4 conditions per query as per your data structure
 
@@ -140,7 +149,7 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
             // Add conditions combined with AND
             boolean firstCondition = true;
             for (int j = i; j < i + conditionsPerQuery && j < conditions.size(); j++) {
-                SQLQueryRequest.SetConditions condition = conditions.get(j);
+                SQLRequest.SetConditions condition = conditions.get(j);
                 if (!firstCondition) {
                     sql.append(" AND ");
                 }
@@ -164,25 +173,13 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
 
         return queries;
     }
-    private List<String> generateCustomSQL(SQLQueryRequest sqlQueryRequest) {
+    private List<String> generateCustomSQL(SQLRequest sqlQueryRequest) {
         // Implementation for generating CUSTOM SQL
         List<String> queries = new ArrayList<>();
         queries.add("CUSTOM SQL QUERY");
         return queries;
     }
-    private String formatConditions(Map<String, SQLQueryRequest.SetConditions> conditions) {
-        StringBuilder conditionStr = new StringBuilder();
-        for (Map.Entry<String, SQLQueryRequest.SetConditions> entry : conditions.entrySet()) {
-            conditionStr.append(entry.getValue().getColumns())
-                    .append(" ")
-                    .append(entry.getValue().getComparative())
-                    .append(" '")
-                    .append(entry.getValue().getValues())
-                    .append("' AND ");
-        }
-        conditionStr.delete(conditionStr.length() - 5, conditionStr.length()); // remove trailing " AND "
-        return conditionStr.toString();
-    }
+
     private boolean isNumeric(String str) {
         if (str == null) {
             return false;

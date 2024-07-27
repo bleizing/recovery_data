@@ -3,7 +3,7 @@ package com.sae.service.impl;
 import com.sae.entity.Requests;
 import com.sae.entity.Users;
 import com.sae.mapper.SQLQueryRequestMapper;
-import com.sae.models.request.SQLQueryRequest;
+import com.sae.models.request.SQLRequest;
 import com.sae.models.response.WebResponse;
 import com.sae.repository.RequestsRepository;
 import com.sae.repository.SQLFileService;
@@ -31,7 +31,7 @@ public class SQLFileServiceImpl implements SQLFileService {
 
 
     @Override
-    public void saveSQLFile(List<String> queries,String operations, SQLQueryRequest sqlQueryRequest) throws IOException {
+    public void saveSQLFile(List<String> queries, SQLRequest sqlQueryRequest) {
         File directory = new File(DIRECTORY);
         if (!directory.exists()) {
             directory.mkdir();
@@ -52,9 +52,9 @@ public class SQLFileServiceImpl implements SQLFileService {
                     writer.newLine();
                 }
                 //if save to DB
-            if (sqlQueryRequest.getIsSaveToDB()){
-                requestsRepository.save(requests);
-            }
+//            if (sqlQueryRequest.getIsSaveToDB()){
+//                requestsRepository.save(requests);
+//            }
         }catch(Exception e){
             ResponseEntity.status(500).body(new WebResponse<>(null, "Failed save to path file and save to DB: " + e.getMessage()));
         }
@@ -62,7 +62,7 @@ public class SQLFileServiceImpl implements SQLFileService {
 
     @Override
     public Resource downloadFileSQL(String fileName) throws IOException {
-//        will be implement soon
+//        will become soon
         return null;
     }
 }

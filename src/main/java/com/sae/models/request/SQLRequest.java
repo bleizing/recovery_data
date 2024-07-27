@@ -6,13 +6,12 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class SQLQueryRequest {
+public class SQLRequest {
     private String userId;
     private String token;
     private String headers;
@@ -30,17 +29,15 @@ public class SQLQueryRequest {
     private List<SetValue> setValues;
     private List<SetConditions> conditions;
     private int conditionsPerQuery;
+    private int totalRows;
 
 
     @Getter
     @Setter
     @Data
     public static class SetConditions {
-        @NotBlank
         private String columns;
-        @NotBlank
         private String comparative;
-        @NotBlank
         private String values;
     }
     @Getter
@@ -48,6 +45,7 @@ public class SQLQueryRequest {
     @Data
     public static class SetValue {
         private String columns;
+        private String comparative;
         private String value;
     }
 }

@@ -1,6 +1,6 @@
 package com.sae.service;
 
-import com.sae.models.request.SQLQueryRequest;
+import com.sae.models.request.SQLRequest;
 import com.sae.repository.ExcelDataReadService;
 import com.sae.repository.ExcelSQLGeneratorService;
 import com.sae.service.impl.ExcelDataReaderServiceImpl;
@@ -64,7 +64,7 @@ class ExcelSQLGeneratorServiceImplTest {
         // Read data from the Excel file
         try{
             // Read data from the Excel file
-            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(
+            SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
                     multipartFile, "uq_au_db", "orders", columnsMapp, mappingHeader, comparatives,"=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             // Validate the result
@@ -72,8 +72,7 @@ class ExcelSQLGeneratorServiceImplTest {
             assertEquals("uq_au_db", sqlQueryRequest.getRegions());
             assertEquals("orders", sqlQueryRequest.getTables());
 
-            List<String> generatedSQLs = new ArrayList<>();
-            generatedSQLs.addAll(excelSQLGeneratorService.generatorSQLFromRequest("SELECT", sqlQueryRequest));
+            List<String> generatedSQLs = new ArrayList<>(excelSQLGeneratorService.generatorSQLFromRequest("SELECT", sqlQueryRequest));
 
             // Expected SQL
             String expectedSQL1 = "SELECT uq_au_db.orders WHERE order_number = '1420011112406131435-0806620' AND status = 'received' AND store_information_id LIKE 12";
@@ -119,7 +118,7 @@ class ExcelSQLGeneratorServiceImplTest {
         try{
 
             // Read data from the Excel file
-            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(
+            SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
                     multipartFile, "uq_au_db", "orders", columnsMapp, mappingHeader, comparatives,"=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             // Validate the result
@@ -127,8 +126,7 @@ class ExcelSQLGeneratorServiceImplTest {
             assertEquals("uq_au_db", sqlQueryRequest.getRegions());
             assertEquals("orders", sqlQueryRequest.getTables());
 
-            List<String> generatedSQLs = new ArrayList<>();
-            generatedSQLs.addAll(excelSQLGeneratorService.generatorSQLFromRequest("DELETE", sqlQueryRequest));
+            List<String> generatedSQLs = new ArrayList<>(excelSQLGeneratorService.generatorSQLFromRequest("DELETE", sqlQueryRequest));
 
             // Expected SQL
             String expectedSQL1 = "DELETE uq_au_db.orders WHERE order_number = '1420011112406131435-0806620' AND status = 'received' AND store_information_id LIKE 12";
@@ -153,42 +151,84 @@ class ExcelSQLGeneratorServiceImplTest {
         // Load the test Excel file
         File file = new File("src/main/resources/tmp_data/test_update.xlsx");
         InputStream inputStream = new FileInputStream(file);
-        multipartFile = new MockMultipartFile("file", inputStream);
+        MockMultipartFile multipartFile = new MockMultipartFile("file", inputStream);
 
         // Prepare mapping header
         Map<String, String> mappingHeader = new HashMap<>();
         mappingHeader.put("setValue1", "status");
         mappingHeader.put("setValue2", "last_update_date");
         mappingHeader.put("condition1", "order_id");
+        mappingHeader.put("condition2", "type_order");
 
-        //prepare columns array requestBody
+
+        // Prepare columns array requestBody
         Map<String, String> columnsMapp = new HashMap<>();
-        columnsMapp.put("column1","orders");
+        columnsMapp.put("column1", "orders");
+
         // Prepare comparatives map
         Map<String, String> comparatives = new HashMap<>();
         comparatives.put("last_update_date", "=");
         comparatives.put("status", "=");
         comparatives.put("order_id", "=");
+        comparatives.put("type_order", "=");
 
-        try{
+        try {
             // Read data from the Excel file
-            SQLQueryRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "public", "orders", columnsMapp, mappingHeader, comparatives,"=");
+            SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
+                    multipartFile, "public", "orders", columnsMapp, mappingHeader, comparatives, "=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             assertNotNull(sqlQueryRequest);
             assertEquals("public", sqlQueryRequest.getRegions());
             assertEquals("orders", sqlQueryRequest.getTables());
 
-            List<String> generatedSQLs = new ArrayList<>();
-            generatedSQLs.addAll(excelSQLGeneratorService.generatorSQLFromRequest("UPDATE", sqlQueryRequest));
-            assertEquals(1, generatedSQLs.size());
+            List<String> generatedSQLs = excelSQLGeneratorService.generatorSQLFromRequest("UPDATE", sqlQueryRequest);
+            System.out.println("Generated SQLs: " + generatedSQLs);
+            assertEquals(2, generatedSQLs.size());
 
+            // Expected SQL
+            String expectedSQL1 = "UPDATE public.orders SET last_update_date = now(), status = 'DELETED' WHERE order_id = 1209380 AND type_order = 'SALE';";
+            String expectedSQL2 = "UPDATE public.orders SET last_update_date = now(), status = 'DELETED' WHERE order_id = 1212121 AND type_order = 'SALE';";
 
-            //expected SQL
-            String expectedSQL = "UPDATE public.orders SET last_update_date = now(), status = 'DELETED' WHERE order_id = 1209380;";
-            assertEquals(expectedSQL, generatedSQLs.get(0));
-        }catch(Exception e){
+            assertEquals(expectedSQL1, generatedSQLs.get(0));
+            assertEquals(expectedSQL2, generatedSQLs.get(1));
+        } catch (Exception e) {
             fail("Exception occurred during execution update generate test: " + e.getMessage());
         }
+    }
+    @Test
+    void testRealDataUpdateSQL() throws Exception {
+        // Load the test Excel file
+        File file = new File("src/main/resources/tmp_data/Label_change.xlsx");
+        InputStream inputStream = new FileInputStream(file);
+        multipartFile = new MockMultipartFile("file", inputStream);
+
+        // Prepare mapping header
+        Map<String, String> mappingHeader = new HashMap<>();
+        mappingHeader.put("setValue1", "label_title");
+        mappingHeader.put("setValue2", "sorting_code");
+        mappingHeader.put("setValue3", "last_update_date");
+        mappingHeader.put("condition1", "identification_id");
+        mappingHeader.put("condition2", "zip_code");
+
+
+        //prepare columns array requestBody
+        Map<String, String> columnsMapp = new HashMap<>();
+        columnsMapp.put("column1","zip_code_sorting_master");
+        // Prepare comparatives map
+        Map<String, String> comparatives = new HashMap<>();
+        comparatives.put("identification_id", "=");
+        comparatives.put("zip_code", "=");
+
+            // Read data from the Excel file
+            SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
+                    multipartFile, "uq_jp_db", "zip_code_sorting_master", columnsMapp, mappingHeader, comparatives,"=");
+            System.out.println("Read Excel result: " + sqlQueryRequest);
+            assertNotNull(sqlQueryRequest);
+            assertEquals("uq_jp_db", sqlQueryRequest.getRegions());
+            assertEquals("zip_code_sorting_master", sqlQueryRequest.getTables());
+
+        List<String> generatedSQLs = new ArrayList<>(excelSQLGeneratorService.generatorSQLFromRequest("UPDATE", sqlQueryRequest));
+            assertEquals(256, sqlQueryRequest.getTotalRows());
+
     }
 }
