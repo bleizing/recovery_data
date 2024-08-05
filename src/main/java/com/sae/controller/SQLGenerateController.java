@@ -3,9 +3,9 @@ package com.sae.controller;
 
 import com.sae.models.request.SQLRequest;
 import com.sae.models.response.WebResponse;
-import com.sae.repository.ExcelDataReadService;
-import com.sae.repository.ExcelSQLGeneratorService;
-import com.sae.repository.SQLFileService;
+import com.sae.service.ExcelDataReadService;
+import com.sae.service.ExcelSQLGeneratorService;
+import com.sae.service.SQLFileService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

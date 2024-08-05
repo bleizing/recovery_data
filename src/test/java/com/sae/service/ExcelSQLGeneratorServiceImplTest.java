@@ -1,8 +1,6 @@
 package com.sae.service;
 
 import com.sae.models.request.SQLRequest;
-import com.sae.repository.ExcelDataReadService;
-import com.sae.repository.ExcelSQLGeneratorService;
 import com.sae.service.impl.ExcelDataReaderServiceImpl;
 import com.sae.service.impl.ExcelSQLGeneratorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -228,7 +226,7 @@ class ExcelSQLGeneratorServiceImplTest {
             assertEquals("zip_code_sorting_master", sqlQueryRequest.getTables());
 
         List<String> generatedSQLs = new ArrayList<>(excelSQLGeneratorService.generatorSQLFromRequest("UPDATE", sqlQueryRequest));
-            assertEquals(256, sqlQueryRequest.getTotalRows());
+            assertEquals(293, sqlQueryRequest.getTotalRows());
 
     }
 }

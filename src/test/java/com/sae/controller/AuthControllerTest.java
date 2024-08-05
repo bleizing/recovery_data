@@ -2,7 +2,7 @@ package com.sae.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sae.models.request.RegisterUsersRequest;
+import com.sae.models.request.LoginUsersRequest;
 import com.sae.models.response.WebResponse;
 import com.sae.repository.UsersRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.MockMvcBuilder.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,41 +21,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UsersControllerTest {
+class AuthControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
-    private UsersRepository userRepository;
-
+    private UsersRepository usersRepository;
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    void setUp() {
-        userRepository.deleteAll();
+    void setUp() throws NullPointerException {
+        if (!(usersRepository == null)){
+        usersRepository.deleteAll();}
     }
 
     @Test
-    void testRegisterSuccess() throws Exception {
-        RegisterUsersRequest request = new RegisterUsersRequest();
-        request.setUsername("test");
-        request.setPassword("rahasia");
-        request.setName("Jon Bigger");
-
+    void LoginUsersFailedNotFound() throws Exception {
+        LoginUsersRequest loginUsersRequest = new LoginUsersRequest();
+        loginUsersRequest.setUsername("test");
+        loginUsersRequest.setPassword("test");
 
         mockMvc.perform(
-                post("/api/users")
+                post("/api/auth/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
+                        .content(objectMapper.writeValueAsString(loginUsersRequest))
         ).andExpectAll(
-                status().isOk()
+                status().isUnauthorized()
         ).andDo(result -> {
             WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<WebResponse<String>>() {
             });
-
-            assertEquals("OK", response.getData());
+            assertNotNull(response.getErrors());
         });
     }
 }

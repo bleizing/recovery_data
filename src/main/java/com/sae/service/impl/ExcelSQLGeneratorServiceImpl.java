@@ -1,7 +1,7 @@
 package com.sae.service.impl;
 
 import com.sae.models.request.SQLRequest;
-import com.sae.repository.ExcelSQLGeneratorService;
+import com.sae.service.ExcelSQLGeneratorService;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

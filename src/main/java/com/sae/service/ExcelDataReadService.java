@@ -1,4 +1,4 @@
-package com.sae.repository;
+package com.sae.service;
 
 import com.sae.models.request.SQLRequest;
 import org.springframework.web.multipart.MultipartFile;

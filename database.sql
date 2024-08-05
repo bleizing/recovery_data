@@ -1,25 +1,35 @@
+CREATE TABLE users (
+    username VARCHAR(255) NOT NULL PRIMARY KEY,
+    password VARCHAR(255),
+    name VARCHAR(255),
+    token VARCHAR(255),
+    token_expired_at BIGINT
+);
+
 CREATE TABLE requests (
-        id VARCHAR(100) NOT NULL, 
-        operations VARCHAR (10) NOT NULL,
-        regions VARCHAR (30),
-        tables VARCHAR (30),
-        PRIMARY KEY (id),
-    )
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255),
+    operations VARCHAR(255),
+    regions VARCHAR(255),
+    table_target VARCHAR(255),
+    columns_target VARCHAR(255),
+    file_location VARCHAR(255),
+    FOREIGN KEY (username) REFERENCES users(username)
+);
 
 CREATE TABLE params (
-    id INT (100) NOT NULL,
-    request_id VARCHAR(100) NOT NULL,
-    columns VARCHAR(100),
-    values_params VARCHAR(255),
-    PRIMARY KEY (id),
-    FOREIGN KEY fk_request_params(request_id) REFERENCES requests(id)
-)
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    request_id INT,
+    columns VARCHAR(255),
+    values_fill VARCHAR(255),
+    FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
+);
 
 CREATE TABLE conditions (
-    id INT(100) NOT NULL,
-    request_id VARCHAR(100) NOT NULL,
-    columns VARCHAR(100),
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    request_id INT,
+    columns VARCHAR(255),
+    comparative VARCHAR(255),
     values_conditions VARCHAR(255),
-    PRIMARY KEY (id),
-    FOREIGN KEY fk_request_conditions(request_id) REFERENCES requests(id)
-)
+    FOREIGN KEY (request_id) REFERENCES requests(id) ON DELETE CASCADE
+);

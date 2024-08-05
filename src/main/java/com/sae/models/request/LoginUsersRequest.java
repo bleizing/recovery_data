@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterUsersRequest {
+public class LoginUsersRequest {
     @NotBlank
     @Size(max = 100)
     private String username;
@@ -19,7 +19,5 @@ public class RegisterUsersRequest {
     @NotBlank
     @Size(max = 100)
     private String password;
-    @NotBlank
-    private String name;
 
 }

@@ -6,7 +6,7 @@ import com.sae.mapper.SQLQueryRequestMapper;
 import com.sae.models.request.SQLRequest;
 import com.sae.models.response.WebResponse;
 import com.sae.repository.RequestsRepository;
-import com.sae.repository.SQLFileService;
+import com.sae.service.SQLFileService;
 import com.sae.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

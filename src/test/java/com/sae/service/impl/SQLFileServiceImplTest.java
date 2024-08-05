@@ -1,10 +1,10 @@
 package com.sae.service.impl;
 
 import com.sae.models.request.SQLRequest;
-import com.sae.repository.ExcelDataReadService;
-import com.sae.repository.ExcelSQLGeneratorService;
+import com.sae.service.ExcelDataReadService;
+import com.sae.service.ExcelSQLGeneratorService;
 import com.sae.repository.RequestsRepository;
-import com.sae.repository.SQLFileService;
+import com.sae.service.SQLFileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

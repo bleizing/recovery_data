@@ -13,16 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "request")
+@Table(name = "requests")
 public class Requests {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne
-    @JoinColumn(name = "users_id", referencedColumnName = "id")
+    @JoinColumn(name = "username", referencedColumnName = "username")
     private Users users;
-    private String name;
     private String operations;
     private String regions;
 
