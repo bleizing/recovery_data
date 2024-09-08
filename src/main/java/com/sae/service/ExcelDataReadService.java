@@ -9,7 +9,7 @@ public interface ExcelDataReadService {
     SQLRequest readExcelData(MultipartFile file,
                              String regions,
                              String tables,
-                             Map<String, String> columns,
+                             String columns,
                              Map<String, String> mappingHeaders,
                              Map<String, String> comparatives,
                              String defaultComparative

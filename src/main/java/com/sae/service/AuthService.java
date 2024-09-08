@@ -7,4 +7,5 @@ import com.sae.models.response.TokenResponse;
 public interface AuthService {
     TokenResponse login(LoginUsersRequest loginUsersRequest);
     void logOut(Users users);
+    Users validateUsersToken(String token);
 }

@@ -57,6 +57,8 @@ public class AuthServiceImpl implements AuthService {
         return instant.toEpochMilli();
     }
 
+
+
     @Override
     @Transactional
     public void logOut(Users users) {
@@ -65,4 +67,18 @@ public class AuthServiceImpl implements AuthService {
 
         usersRepository.save(users);
     }
+
+    @Override
+    public Users validateUsersToken(String token) {
+        Users users = usersRepository.findFirstByToken(token)
+                .orElseThrow(() -> new RuntimeException("User Not Found due to missing Token"));
+        long currentTimeMillis = System.currentTimeMillis();
+
+        if (users.getTokenExpiredAt() < currentTimeMillis) {
+            throw new RuntimeException("Token has expired");
+        }
+        return users;
+    }
+
+
 }

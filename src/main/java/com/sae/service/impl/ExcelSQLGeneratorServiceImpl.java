@@ -124,7 +124,7 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
                 }
                 firstCondition = false;
             }
-
+            sql.append(";");
             queries.add(sql.toString());
         }
 
@@ -166,8 +166,9 @@ public class ExcelSQLGeneratorServiceImpl implements ExcelSQLGeneratorService {
                         sql.append("'").append(condition.getValues()).append("'");
                     }
                 firstCondition = false;
-            }
 
+            }
+            sql.append(";");
             queries.add(sql.toString());
         }
 

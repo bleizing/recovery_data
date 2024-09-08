@@ -2,6 +2,7 @@ package com.sae.controller;
 
 
 import com.sae.models.request.SQLRequest;
+import com.sae.models.response.GenerateResponse;
 import com.sae.models.response.WebResponse;
 import com.sae.service.ExcelDataReadService;
 import com.sae.service.ExcelSQLGeneratorService;
@@ -40,7 +41,7 @@ public class SQLGenerateController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("regions") String regions,
             @RequestParam("tables") String tables,
-            @RequestParam Map<String, String> columns,
+            @RequestParam("columns")  String columns,
             @RequestParam Map<String, String> mappingHeaders,
             @RequestParam Map<String, String> comparatives,
             @RequestParam(value = "defaultComparative", defaultValue = "=") String defaultComparative,
@@ -78,12 +79,11 @@ public class SQLGenerateController {
             if (generatedSQL == null || generatedSQL.isEmpty()) {
                 throw new IOException("Generated SQL is null or empty.");
             }
-            sqlFileService.saveSQLFile(generatedSQL, sqlQueryRequest);
+            String path = String.valueOf(sqlFileService.saveSQLFile(generatedSQL, sqlQueryRequest));
             //save if success generate
-            return WebResponse.<String>builder().data("true").build();
+            return WebResponse.<String>builder().data("success generate file sql path in: "+path).build();
         } catch (Exception e) {
             return WebResponse.<String>builder().data("false {}"+ e).build();
         }
     }
-
 }

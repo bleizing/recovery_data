@@ -63,7 +63,7 @@ class ExcelSQLGeneratorServiceImplTest {
         try{
             // Read data from the Excel file
             SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "uq_au_db", "orders", columnsMapp, mappingHeader, comparatives,"=");
+                    multipartFile, "uq_au_db", "orders",null, mappingHeader, comparatives,"=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             // Validate the result
             assertNotNull(sqlQueryRequest);
@@ -117,7 +117,7 @@ class ExcelSQLGeneratorServiceImplTest {
 
             // Read data from the Excel file
             SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "uq_au_db", "orders", columnsMapp, mappingHeader, comparatives,"=");
+                    multipartFile, "uq_au_db", "orders",null, mappingHeader, comparatives,"=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             // Validate the result
             assertNotNull(sqlQueryRequest);
@@ -159,9 +159,6 @@ class ExcelSQLGeneratorServiceImplTest {
         mappingHeader.put("condition2", "type_order");
 
 
-        // Prepare columns array requestBody
-        Map<String, String> columnsMapp = new HashMap<>();
-        columnsMapp.put("column1", "orders");
 
         // Prepare comparatives map
         Map<String, String> comparatives = new HashMap<>();
@@ -173,7 +170,7 @@ class ExcelSQLGeneratorServiceImplTest {
         try {
             // Read data from the Excel file
             SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "public", "orders", columnsMapp, mappingHeader, comparatives, "=");
+                    multipartFile, "public", "orders",null, mappingHeader, comparatives, "=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             assertNotNull(sqlQueryRequest);
             assertEquals("public", sqlQueryRequest.getRegions());
@@ -208,10 +205,6 @@ class ExcelSQLGeneratorServiceImplTest {
         mappingHeader.put("condition1", "identification_id");
         mappingHeader.put("condition2", "zip_code");
 
-
-        //prepare columns array requestBody
-        Map<String, String> columnsMapp = new HashMap<>();
-        columnsMapp.put("column1","zip_code_sorting_master");
         // Prepare comparatives map
         Map<String, String> comparatives = new HashMap<>();
         comparatives.put("identification_id", "=");
@@ -219,7 +212,7 @@ class ExcelSQLGeneratorServiceImplTest {
 
             // Read data from the Excel file
             SQLRequest sqlQueryRequest = excelDataReadService.readExcelData(
-                    multipartFile, "uq_jp_db", "zip_code_sorting_master", columnsMapp, mappingHeader, comparatives,"=");
+                    multipartFile, "uq_jp_db", "zip_code_sorting_master",null, mappingHeader, comparatives,"=");
             System.out.println("Read Excel result: " + sqlQueryRequest);
             assertNotNull(sqlQueryRequest);
             assertEquals("uq_jp_db", sqlQueryRequest.getRegions());

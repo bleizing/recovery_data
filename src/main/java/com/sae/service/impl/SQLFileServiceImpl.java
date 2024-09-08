@@ -4,8 +4,10 @@ import com.sae.entity.Requests;
 import com.sae.entity.Users;
 import com.sae.mapper.SQLQueryRequestMapper;
 import com.sae.models.request.SQLRequest;
+import com.sae.models.response.GenerateResponse;
 import com.sae.models.response.WebResponse;
 import com.sae.repository.RequestsRepository;
+import com.sae.service.AuthService;
 import com.sae.service.SQLFileService;
 import com.sae.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,37 +29,42 @@ public class SQLFileServiceImpl implements SQLFileService {
     private RequestsRepository requestsRepository;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private GenerateResponse generateResponse;
     private static final String DIRECTORY = "src/main/resources/generate_result";
 
 
     @Override
-    public void saveSQLFile(List<String> queries, SQLRequest sqlQueryRequest) {
+    public WebResponse<String> saveSQLFile(List<String> queries, SQLRequest sqlQueryRequest) {
         File directory = new File(DIRECTORY);
         if (!directory.exists()) {
             directory.mkdir();
         }
-        // Fetch the Users entity from database using userId
-        Users users = usersRepository.findFirstByToken(sqlQueryRequest.getToken())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        // Map SQLQueryRequest to Requests entity using the mapper
+
+//        // Validate user
+        Users users = new Users();
+        users.setName("Jon Bigger");
+        users.setPassword("salah");
+        users.setUsername("sample");
+        users.setTokenExpiredAt(3000L);
+        users.setToken("usoiasoa");
+        System.out.println(" getRegions: "+sqlQueryRequest.getRegions()+" getTables: "+sqlQueryRequest.getTables()+"getColumns: "+sqlQueryRequest.getColumns()+"getSetValues: "+sqlQueryRequest.getSetValues()+"getConditions:"+sqlQueryRequest.getConditions());
+//        // Map SQLQueryRequest to Requests entity using the mapper
         Requests requests = SQLQueryRequestMapper.toEntity(sqlQueryRequest, users);
         // Verify that the essential fields in the requests entity are populated
-        if (requests.getRegions() == null || requests.getTables() == null || requests.getColumns() == null) {
-            throw new IllegalStateException("Failed to map SQLQueryRequest to Requests entity due to missing fields.");
-        }
-            Path filePath = Paths.get(DIRECTORY, sqlQueryRequest.getFileName() +".sql");
+        Path filePath = Paths.get(DIRECTORY, sqlQueryRequest.getFileName() +".sql");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath.toFile()))) {
                 for (String query : queries) {
                     writer.write(query);
                     writer.newLine();
                 }
-                //if save to DB
-//            if (sqlQueryRequest.getIsSaveToDB()){
-//                requestsRepository.save(requests);
-//            }
+        requestsRepository.save(requests);
         }catch(Exception e){
             ResponseEntity.status(500).body(new WebResponse<>(null, "Failed save to path file and save to DB: " + e.getMessage()));
         }
+        return WebResponse.<String>builder().data(String.valueOf(filePath)).build();
     }
 
     @Override
