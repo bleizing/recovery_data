@@ -60,7 +60,7 @@ public class ExcelHelper {
 				
 				Iterator<Row> rows = sheet.iterator();
 				int rowNumber = 0;
-				
+
 				while (rows.hasNext()) {
 					columns = new ArrayList<>();
 					conditions = new ArrayList<>();
@@ -71,6 +71,10 @@ public class ExcelHelper {
 					if (rowNumber == 0) {
 						rowNumber++;
 						continue;
+					}
+					
+					if (currentRow.getCell(0) == null || currentRow.getCell(0).getRichStringCellValue().getString() == "") {
+						break;
 					}
 					
 					for (ColumnDto column : table.getColumns()) {
