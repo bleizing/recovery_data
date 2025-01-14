@@ -73,7 +73,7 @@ public class ExcelHelper {
 						continue;
 					}
 					
-					if (currentRow.getCell(0) == null || currentRow.getCell(0).getRichStringCellValue().getString() == "") {
+					if (currentRow.getCell(0) == null || getFirstCol(currentRow.getCell(0)).equals("")) {
 						break;
 					}
 					
@@ -90,7 +90,12 @@ public class ExcelHelper {
 					for (ConditionDto condition : table.getConditions()) {
 						ConditionDto cond = new ConditionDto();
 						cond.setName(condition.getName());
-						cond.setValue(getValue(condition, currentRow));
+						String val = getValue(condition, currentRow);
+						if (val.contains(".0")) {
+							val = val.substring(0, val.length() - 2);
+							cond.setNumber(true);
+						}
+						cond.setValue(val);
 						conditions.add(cond);
 					}
 					conditionsMap.put(rowTotal, conditions);
@@ -115,6 +120,25 @@ public class ExcelHelper {
 		
 		Cell cell = row.getCell(Integer.parseInt(obj.getValue()));
 		
+		if (cell != null) {
+			switch (cell.getCellType()) {
+				case STRING:
+					value = cell.getRichStringCellValue().getString();
+					break;
+				case NUMERIC:
+					value = cell.getNumericCellValue() + "";
+					break;
+				default:
+					break;
+			}
+		}
+		
+		return value;
+	}
+	
+	private String getFirstCol(Cell cell) {
+		String value = "";
+		
 		switch (cell.getCellType()) {
 			case STRING:
 				value = cell.getRichStringCellValue().getString();
@@ -125,7 +149,7 @@ public class ExcelHelper {
 			default:
 				break;
 		}
-			
+		
 		return value;
 	}
 }

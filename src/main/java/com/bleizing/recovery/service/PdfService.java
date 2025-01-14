@@ -54,7 +54,6 @@ public class PdfService {
 				document.close();
 			}
 		}
-		logger.info("end of create pdf");
 	}
 	
 	public String createFilename() {

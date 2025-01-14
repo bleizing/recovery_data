@@ -122,9 +122,13 @@ public class ExcelService {
 						
 						query.append(condition.getName());
 						query.append(EQUALS);
-						query.append(APOSTROPHE);
+						if (!condition.isNumber()) {
+							query.append(APOSTROPHE);
+						}
 						query.append(condition.getValue());
-						query.append(APOSTROPHE);
+						if (!condition.isNumber()) {
+							query.append(APOSTROPHE);
+						}
 						
 						isFirst = false;
 					}
