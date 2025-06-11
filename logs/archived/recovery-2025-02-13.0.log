@@ -1,0 +1,6 @@
+2025-02-13 13:20:57,076 INFO o.s.b.StartupInfoLogger [main] Starting RecoveryApplicationTests using Java 19.0.1 with PID 4444 (started by hand_ in D:\Dimas\Projects\Recovery Excel\recovery)
+2025-02-13 13:20:57,077 DEBUG o.s.b.StartupInfoLogger [main] Running with Spring Boot v3.1.2, Spring v6.0.11
+2025-02-13 13:20:57,078 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2025-02-13 13:20:57,971 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page: class path resource [static/index.html]
+2025-02-13 13:20:58,073 WARN o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration [main] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-02-13 13:20:58,115 INFO o.s.b.StartupInfoLogger [main] Started RecoveryApplicationTests in 1.35 seconds (process running for 2.188)

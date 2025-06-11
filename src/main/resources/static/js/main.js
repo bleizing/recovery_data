@@ -287,6 +287,7 @@ $(function() {
             var file = $('#file').prop('files')[0];
             
             var baseUrl = $(location).attr("origin");
+            baseUrl += "/recovery";
             
             const formData = new FormData();
 		    formData.append('request', JSON.stringify(obj)); // Menambahkan data teks
